@@ -1,5 +1,7 @@
 import React from 'react';
 import './Profile.css';
+import { fetchUser } from '../store';
+import { connect } from 'react-redux';
 
 class Profile extends React.Component {
   constructor() {
@@ -9,15 +11,11 @@ class Profile extends React.Component {
     };
   }
   componentDidMount() {
-    fetch('api/xx')
-      .then(res => res.json())
-      .then(body =>
-        this.setState({ body }, () => {
-          console.log('body fetch', body);
-        })
-      );
+    this.props.user();
   }
   render() {
+    const { user } = this.props;
+    console.log(user);
     return (
       <div>
         <h2>Profile</h2>
@@ -26,4 +24,13 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+const mapDispatch = dispatch => {
+  return {
+    user: () => dispatch(fetchUser())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatch
+)(Profile);
