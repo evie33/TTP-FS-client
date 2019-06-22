@@ -1,15 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Profile from './component/Profile';
+// import Profile from './component/Profile';
+// import LogIn from './component/LogIn';
+// import Register from './component/Register';
+// import { withRouter, Route, Switch } from 'react-router-dom';
+import Routes from './Routes';
+import Navigation from './Navbar';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-      <Profile />
+      <Navigation />
+      <Routes />
     </div>
   );
 }

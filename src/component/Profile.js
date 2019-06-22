@@ -1,36 +1,34 @@
 import React from 'react';
-import './Profile.css';
-import { fetchUser } from '../store';
 import { connect } from 'react-redux';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 class Profile extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      body: []
-    };
-  }
-  componentDidMount() {
-    this.props.user();
-  }
   render() {
     const { user } = this.props;
-    console.log(user);
     return (
       <div>
-        <h2>Profile</h2>
+        <h2>Welcome {user.name}</h2>
+        <h2>Your balance: {user.balance}</h2>
+        <ButtonToolbar>
+          <Button variant="outline-info" href="/profile/currentStocks">
+            My Stocks
+          </Button>
+          <Button variant="outline-info" href="/profile/transaction">
+            Transaction History
+          </Button>
+          <Button variant="outline-info" href="/investmore">
+            Buy Stocks
+          </Button>
+        </ButtonToolbar>
       </div>
     );
   }
 }
 
-const mapDispatch = dispatch => {
+const mapState = state => {
   return {
-    user: () => dispatch(fetchUser())
+    user: state.user.current
   };
 };
 
-export default connect(
-  null,
-  mapDispatch
-)(Profile);
+export default connect(mapState)(Profile);
