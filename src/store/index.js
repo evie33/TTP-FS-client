@@ -4,10 +4,12 @@ import createLogger from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import user from './userReducer';
 import stock from './stockReducer';
+import transaction from './transactionReducer';
 
 const reducer = combineReducers({
   user,
-  stock
+  stock,
+  transaction
 });
 
 const store = createStore(
@@ -18,3 +20,4 @@ const store = createStore(
 export default store;
 export * from './userReducer';
 export * from './stockReducer';
+export * from './transactionReducer';

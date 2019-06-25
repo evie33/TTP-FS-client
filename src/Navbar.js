@@ -1,19 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Nav, Navbar } from 'react-bootstrap';
+import { logout } from './store/userReducer';
+import { withRouter } from 'react-router-dom';
+import { Nav, Navbar, Button } from 'react-bootstrap';
 
 class Navigation extends React.Component {
   render() {
-    const { isLoggedIn, name } = this.props;
-    console.log(this.props, name);
+    const { isLoggedIn, name, handleClick } = this.props;
     return (
       <Navbar>
         <Navbar.Brand href="/login"> TTP-FS</Navbar.Brand>
         {isLoggedIn ? (
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
-              Signed in as: <a href="/profile">{name}</a>
+              Signed in as:<a href="/profile/investmore">{name}</a>
             </Navbar.Text>
+            <Button
+              variant="outline-danger"
+              type="submit"
+              onClick={handleClick}
+              href="/login"
+            >
+              Log Out{' '}
+            </Button>
           </Navbar.Collapse>
         ) : (
           <Nav activeKey="/login">
@@ -37,4 +46,17 @@ const mapState = state => {
   };
 };
 
-export default connect(mapState)(Navigation);
+const mapDispatch = dispatch => {
+  return {
+    handleClick() {
+      dispatch(logout());
+    }
+  };
+};
+
+export default withRouter(
+  connect(
+    mapState,
+    mapDispatch
+  )(Navigation)
+);

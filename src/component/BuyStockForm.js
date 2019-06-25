@@ -2,12 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { LineChart } from 'react-chartkick';
 import 'chart.js';
-import {
-  fetchStocks,
-  updateUserTransaction,
-  updateUserStock,
-  updateUserBalance
-} from '../store';
+import { fetchStocks, updateUserTransaction } from '../store/stockReducer';
+import { updateUserBalance } from '../store/userReducer';
 import {
   Form,
   FormControl,
@@ -71,7 +67,7 @@ class BuyStocks extends React.Component {
             placeholder="Enter ticker symbol"
             name="tickerSymbol"
           />
-          <Button type="submit">Check Price</Button>
+          <Button type="submit">Submit</Button>
         </Form>
         <br />
         <br />
@@ -184,7 +180,9 @@ const mapState = state => {
   };
 };
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch, ownProps) => {
+  const { history } = ownProps;
+  console.log('------', history);
   return {
     handleSubmit(evt) {
       evt.preventDefault();
@@ -199,9 +197,9 @@ const mapDispatch = dispatch => {
       let tickerSymbol = evt.target.tickerSymbol.value;
       let balance = evt.target.balance.value;
       let userId = evt.target.id.value;
+      console.log('------on purchase', balance);
       dispatch(updateUserBalance(balance, userId));
       dispatch(updateUserTransaction(quantity, totalBuy, tickerSymbol, userId));
-      dispatch(updateUserStock(quantity, totalBuy, tickerSymbol, userId));
     }
   };
 };

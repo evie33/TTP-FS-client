@@ -3,9 +3,11 @@ import axios from 'axios';
 //---------------------- ACTION TYPES -----------------------
 const GOT_USER = 'GOT_USER';
 const UPDATED_USER = 'UPDATED_USER';
+const LOGOUT_USER = 'LOGOUT_USER';
 //---------------------- ACTION CREATORS -----------------------
 const gotUser = user => ({ type: GOT_USER, user });
 const updatedUserBalance = user => ({ type: UPDATED_USER, user });
+const logoutUser = () => ({ type: LOGOUT_USER });
 
 //---------------------- INITIAL STATE -----------------------
 const initialState = {
@@ -61,10 +63,19 @@ export const fetchUser = () => {
   };
 };
 
+export const logout = () => async dispatch => {
+  try {
+    await axios.post('/auth/logout');
+    dispatch(logoutUser());
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export const updateUserBalance = (balance, userId) => {
   return async dispatch => {
     try {
-      console.log('-----------need to update user balance', balance, userId);
+      console.log('-----------need to update user balance', balance);
       const { data } = await axios.put('/auth/user', { balance, userId });
       console.log(data);
       dispatch(updatedUserBalance(data));
@@ -81,6 +92,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         current: action.user
+      };
+
+    case LOGOUT_USER:
+      return {
+        ...state,
+        current: {}
       };
 
     default:

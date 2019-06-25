@@ -1,48 +1,52 @@
 import React from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Badge, Card } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { auth } from '../store';
 
 function LogIn(props) {
-  const { handleSubmit } = props;
+  const { handleSubmit, error } = props;
   return (
-    <Form onSubmit={e => handleSubmit(e)}>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          required
-          type="text"
-          placeholder="Enter email"
-          name="email"
-        />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+    <Card border="dark" style={{ width: '95%' }}>
+      <Card.Header>
+        <h1>Sign In </h1>
+      </Card.Header>
+      <Form onSubmit={e => handleSubmit(e)}>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            required
+            type="text"
+            placeholder="Enter email"
+            name="email"
+          />
+        </Form.Group>
 
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          required
-          type="password"
-          placeholder="Password"
-          name="password"
-        />
-      </Form.Group>
-      <Form.Group controlId="formBasicChecbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            required
+            type="password"
+            placeholder="Password"
+            name="password"
+          />
+        </Form.Group>
+        {error && (
+          <div>
+            <Badge variant="danger">Error: {error.response.data}</Badge>
+          </div>
+        )}
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </Card>
   );
 }
 
 const mapLogin = state => {
   return {
     name: 'login',
-    error: state.user.error
+    error: state.user.current.error
   };
 };
 
