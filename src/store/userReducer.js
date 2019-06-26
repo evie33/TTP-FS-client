@@ -55,8 +55,8 @@ export const fetchUser = () => {
   return async dispatch => {
     try {
       const { data } = await axios.get('/auth/user');
+      console.log('>>>>>>>>>>get user after update ', data);
       dispatch(gotUser(data || initialState));
-      console.log(data);
     } catch (err) {
       console.error(err);
     }
@@ -75,9 +75,7 @@ export const logout = () => async dispatch => {
 export const updateUserBalance = (balance, userId) => {
   return async dispatch => {
     try {
-      console.log('-----------need to update user balance', balance);
       const { data } = await axios.put('/auth/user', { balance, userId });
-      console.log(data);
       dispatch(updatedUserBalance(data));
     } catch (err) {
       console.error(err);
@@ -93,13 +91,16 @@ export default function(state = initialState, action) {
         ...state,
         current: action.user
       };
-
+    case UPDATED_USER:
+      return {
+        ...state,
+        current: action.user
+      };
     case LOGOUT_USER:
       return {
         ...state,
         current: {}
       };
-
     default:
       return state;
   }

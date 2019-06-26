@@ -1,16 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getAllStocks } from '../store';
 import { Table } from 'react-bootstrap';
 
 class MyStocks extends React.Component {
-  componentDidMount() {
-    this.props.loadInitialData();
-  }
-
   render() {
     const { stocks } = this.props;
-    console.log(stocks.currentPrice);
     return (
       <div>
         <h2>My Stocks</h2>
@@ -31,12 +25,10 @@ class MyStocks extends React.Component {
                 <td>{stock.tickerSymbol}</td>
                 <td>{stock.totalBuy}</td>
                 <td>{stock.quantity}</td>
-
-                <td>{}</td>
+                <td>{stock.currentPrice}</td>
               </tr>
             ))}
           </tbody>
-          {stocks.currentPrice && stocks.currentPrice.map(each => <p>each</p>)}
         </Table>
       </div>
     );
@@ -45,20 +37,8 @@ class MyStocks extends React.Component {
 
 const mapState = state => {
   return {
-    user: state.user.current,
     stocks: state.stock.allStocks
   };
 };
 
-const mapDispatch = (dispatch, ownProps) => {
-  return {
-    loadInitialData() {
-      dispatch(getAllStocks());
-    }
-  };
-};
-
-export default connect(
-  mapState,
-  mapDispatch
-)(MyStocks);
+export default connect(mapState)(MyStocks);

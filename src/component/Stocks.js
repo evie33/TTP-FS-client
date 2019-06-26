@@ -19,11 +19,13 @@ import {
 } from 'react-bootstrap';
 
 class BuyStocks extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const { user } = this.props;
     this.state = {
       quantity: 1,
-      total: 0
+      total: 0,
+      balance: user.balance
     };
   }
 
@@ -57,6 +59,12 @@ class BuyStocks extends React.Component {
     let total = (quantity * price).toFixed(2);
     return (balance - total).toFixed(2);
   };
+
+  handleChange = evt => {
+    this.setState({
+      [evt.target.name]: evt.target.value
+    });
+  };
   render() {
     const { handlePurchase, handleSubmit, stock, user } = this.props;
     let { quantity, total } = this.state;
@@ -75,7 +83,7 @@ class BuyStocks extends React.Component {
         </Form>
         <br />
         <br />
-        {user.balance && stock.symbol ? (
+        {user && stock.symbol ? (
           <div>
             <h4>Company Name :</h4>
             <h4>{stock.companyName}</h4>
@@ -125,6 +133,7 @@ class BuyStocks extends React.Component {
                       plaintext
                       readOnly
                       name="quantity"
+                      onChange={this.handleChange}
                       value={quantity}
                     />
                   </Col>
@@ -144,6 +153,7 @@ class BuyStocks extends React.Component {
                 plaintext
                 readOnly
                 name="total"
+                onChange={this.handleChange}
                 value={this.totalPrice(quantity, stock.latestPrice)}
               />
               ID: <Form.Control plaintext readOnly name="id" value={user.id} />
@@ -154,6 +164,7 @@ class BuyStocks extends React.Component {
                     plaintext
                     readOnly
                     name="balance"
+                    onChange={this.handleChange}
                     value={this.remainBalance(
                       user.balance,
                       quantity,
@@ -194,11 +205,11 @@ const mapDispatch = dispatch => {
 
     handlePurchase(evt) {
       evt.preventDefault();
-      let quantity = evt.target.quantity.value;
-      let totalBuy = evt.target.total.value;
+      let quantity = Number(evt.target.quantity.value);
+      let totalBuy = Number(evt.target.total.value);
       let tickerSymbol = evt.target.tickerSymbol.value;
-      let balance = evt.target.balance.value;
-      let userId = evt.target.id.value;
+      let balance = Number(evt.target.balance.value);
+      let userId = Number(evt.target.id.value);
       dispatch(updateUserBalance(balance, userId));
       dispatch(updateUserTransaction(quantity, totalBuy, tickerSymbol, userId));
       dispatch(updateUserStock(quantity, totalBuy, tickerSymbol, userId));

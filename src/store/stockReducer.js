@@ -4,20 +4,19 @@ import axios from 'axios';
 const GOT_BUY_STOCK = 'GOT_BUY_STOCK';
 const BOUGHT_STOCK = 'BOUGHT_STOCK';
 const GOT_ALL_STOCKS = 'GOT_ALL_STOCKS';
-const GOT_CURRENT_PRICE = 'GOT_CURRENT_PRICE';
+const UPDATE_STOCK_CURRENT_PRICE = 'UPDATE_STOCK_CURRENT_PRICE';
 
 //---------------------- ACTION CREATORS -----------------------
 const gotBuyStock = stock => ({ type: GOT_BUY_STOCK, stock });
 const boughtStock = stock => ({ type: BOUGHT_STOCK, stock });
 const gotAllStocks = allStocks => ({ type: GOT_ALL_STOCKS, allStocks });
-const gotCurrentPrice = currentPrice => ({
-  type: GOT_CURRENT_PRICE,
-  currentPrice
+const updateCurrentPrice = stock => ({
+  type: UPDATE_STOCK_CURRENT_PRICE,
+  stock
 });
 
 //---------------------- INITIAL STATE -----------------------
 const initialState = {
-  currentPrice: [],
   stock: {},
   allStocks: []
 };
@@ -27,7 +26,6 @@ const initialState = {
 export const fetchStocks = tickerSymbol => {
   return async dispatch => {
     try {
-      console.log(tickerSymbol);
       const { data } = await axios.get(`/api/stocks/${tickerSymbol}`);
       dispatch(gotBuyStock(data || initialState));
     } catch (err) {
@@ -56,13 +54,15 @@ export const getAllStocks = id => {
   return async dispatch => {
     try {
       const { data } = await axios.get('/api/stocks/all');
-      dispatch(gotAllStocks(data));
-      let priceArr = [];
       data.forEach(async each => {
         let price = await axios.get(`/api/stocks/current/${each.tickerSymbol}`);
-        priceArr.push(price);
+        let updateData = await axios.put(
+          `/api/stocks/updateCurrentPrice/${each.tickerSymbol}`,
+          price
+        );
+        dispatch(updateCurrentPrice(updateData));
       });
-      dispatch(gotCurrentPrice(priceArr));
+      dispatch(gotAllStocks(data));
     } catch (err) {
       console.error(err);
     }
@@ -82,10 +82,10 @@ export default function(state = initialState, action) {
         ...state,
         allStocks: action.allStocks
       };
-    case GOT_CURRENT_PRICE:
+    case UPDATE_STOCK_CURRENT_PRICE:
       return {
         ...state,
-        currentPrice: action.currentPrice
+        stock: action.stock
       };
     default:
       return state;

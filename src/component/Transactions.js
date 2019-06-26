@@ -1,15 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getTransaction } from '../store';
 import { Table } from 'react-bootstrap';
 
 class Transactions extends React.Component {
-  componentDidMount() {
-    this.props.loadInitialData();
-  }
   render() {
     const { transactions } = this.props;
-
     return (
       <div>
         <h2>Transaction</h2>
@@ -42,20 +37,8 @@ class Transactions extends React.Component {
 
 const mapState = state => {
   return {
-    user: state.user.current,
     transactions: state.transaction.transactions
   };
 };
 
-const mapDispatch = dispatch => {
-  return {
-    loadInitialData() {
-      dispatch(getTransaction());
-    }
-  };
-};
-
-export default connect(
-  mapState,
-  mapDispatch
-)(Transactions);
+export default connect(mapState)(Transactions);

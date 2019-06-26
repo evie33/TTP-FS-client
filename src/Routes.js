@@ -7,13 +7,14 @@ import Profile from './component/Profile';
 import Transactions from './component/Transactions';
 import MyStocks from './component/MyStocks';
 import { withRouter, Route, Switch } from 'react-router-dom';
-import { fetchUser } from './store/userReducer';
+import { fetchUser, getTransaction, getAllStocks } from './store';
 import { Card, Nav } from 'react-bootstrap';
 
 class Routes extends React.Component {
   componentDidMount() {
     this.props.loadInitialData();
   }
+
   render() {
     const { isLoggedIn } = this.props;
     return (
@@ -60,6 +61,7 @@ class Routes extends React.Component {
 
 const mapState = state => {
   return {
+    ...state,
     isLoggedIn: !!state.user.current.id
   };
 };
@@ -68,12 +70,12 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(fetchUser());
+      dispatch(getTransaction());
+      dispatch(getAllStocks());
     }
   };
 };
 
-// The `withRouter` wrapper makes sure that updates are not blocked
-// when the url changes
 export default withRouter(
   connect(
     mapState,
